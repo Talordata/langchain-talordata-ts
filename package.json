@@ -1,0 +1,39 @@
+{
+  "name": "langchain-talor-serp",
+  "version": "0.1.0",
+  "description": "LangChain integration for Talor SERP API - TypeScript version",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "ts-node test.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "langchain",
+    "serp",
+    "search",
+    "talor",
+    "google",
+    "bing",
+    "duckduckgo"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/node": "^20.0.0"
+  },
+  "peerDependencies": {
+    "langchain": ">=0.1.0"
+  },
+  "files": [
+    "dist",
+    "data"
+  ]
+}
