@@ -11,12 +11,12 @@
 [Tools](#tools) •
 [Resources](#resources)
 
-TypeScript integration for the Talor SERP API.
+LangChain integration for the Talor SERP API.
 
 This package provides:
 
 - `TalorSerpAPIWrapper` for direct async API access
-- `TalorSerpTool` for creating tool-like objects for agents and model tool routing
+- `TalorSerpTool` for creating tool descriptors for model tool routing
 - bundled engine schemas for 30+ search engines
 - support for search, history, and statistics endpoints
 
@@ -35,15 +35,25 @@ This package provides:
 npm install langchain-talor-serp
 ```
 
+If you want to use the modern LangChain chat-model tool-calling flow, install a model integration too:
+
+```bash
+npm install @langchain/openai
+```
+
 ## Quick Start
 
-### 1. Set up authentication
+### 1. Get your API key
+
+Sign up at [TalorData](https://talordata.com) and get your API key from the dashboard.
+
+### 2. Set up authentication
 
 ```typescript
 process.env.TALOR_API_KEY = "your-token";
 ```
 
-### 2. Wrapper usage
+### 3. Wrapper usage
 
 ```typescript
 import { TalorSerpAPIWrapper } from "langchain-talor-serp";
@@ -53,7 +63,52 @@ const result = await wrapper.run("LangChain tutorial");
 console.log(result);
 ```
 
-### 3. Search tool
+### 4. Modern tool-calling usage
+
+Like the Python version, the recommended modern flow is: bind tools to a chat
+model, let the model emit `tool_calls`, then execute the chosen tool. In the
+TypeScript package, Talor tools are lightweight descriptors with `name`,
+`description`, `inputSchema`, and `execute(input)`.
+
+```typescript
+import { ChatOpenAI } from "@langchain/openai";
+import { TalorSerpTool } from "langchain-talor-serp";
+
+process.env.TALOR_API_KEY = "your-token";
+
+const llm = new ChatOpenAI({
+  model: "gpt-4o-mini",
+  temperature: 0,
+});
+
+const searchTool = TalorSerpTool.fromEnv();
+
+const modelWithTools = llm.bindTools([
+  {
+    type: "function",
+    function: {
+      name: searchTool.name,
+      description: searchTool.description,
+      parameters: searchTool.inputSchema,
+    },
+  },
+]);
+
+const response = await modelWithTools.invoke(
+  "Search for the latest LangChain news"
+);
+
+console.log(response);
+
+for (const call of response.tool_calls ?? []) {
+  if (call.name === searchTool.name) {
+    const toolResult = await searchTool.execute(call.args);
+    console.log(toolResult);
+  }
+}
+```
+
+### 5. Search tool
 
 ```typescript
 import { TalorSerpTool } from "langchain-talor-serp";
@@ -91,7 +146,7 @@ const result = await searchTool.execute({
 });
 ```
 
-### 4. History tool
+### 6. History tool
 
 ```typescript
 import { TalorSerpTool } from "langchain-talor-serp";
@@ -121,7 +176,7 @@ History parameters:
 - `end_time`: optional unix timestamp in seconds
 - `timezone`: optional timezone header such as `Asia/Shanghai` or `+08:00`
 
-### 5. Statistics tool
+### 7. Statistics tool
 
 ```typescript
 import { TalorSerpTool } from "langchain-talor-serp";
@@ -145,28 +200,53 @@ Statistics parameters:
 - `engines`: optional comma-separated engine keys such as `google,bing`
 - `timezone`: optional timezone offset such as `+08:00`
 
-### 6. Bind multiple tools
+### 8. Bind multiple tools
 
 ```typescript
+import { ChatOpenAI } from "@langchain/openai";
 import { TalorSerpTool } from "langchain-talor-serp";
 
-const tools = TalorSerpTool.toolsFromEnv();
+const llm = new ChatOpenAI({
+  model: "gpt-4o-mini",
+  temperature: 0,
+});
 
-for (const tool of tools) {
-  console.log(tool.name, tool.description);
+const tools = TalorSerpTool.toolsFromEnv();
+const toolsByName = Object.fromEntries(tools.map((tool) => [tool.name, tool]));
+
+const modelWithTools = llm.bindTools(
+  tools.map((tool) => ({
+    type: "function",
+    function: {
+      name: tool.name,
+      description: tool.description,
+      parameters: tool.inputSchema,
+    },
+  }))
+);
+
+const response = await modelWithTools.invoke(
+  "Show my SERP usage statistics for 2026-06-01 to 2026-06-05"
+);
+
+for (const call of response.tool_calls ?? []) {
+  const tool = toolsByName[call.name];
+  if (!tool) continue;
+
+  const result = await tool.execute(call.args);
+  console.log(call.name, result);
 }
 ```
 
-These tools expose:
+These tool descriptors expose:
 
 - `name`
 - `description`
 - `inputSchema`
 - `execute(input)`
 
-If you integrate them with your own model tool-calling loop, remember that the
-model only decides which tool to call. You still need to execute the selected
-tool yourself by calling `tool.execute(...)`.
+`bindTools()` only lets the model generate `tool_calls`. To actually execute
+the selected tool, your code still needs to call `tool.execute(...)`.
 
 ## Tools
 
@@ -174,6 +254,22 @@ tool yourself by calling `tool.execute(...)`.
 - `talor_serp_list_engines` - inspect supported engines and detailed parameter schemas
 - `talor_serp_history` - query historical SERP requests
 - `talor_serp_statistics` - query usage statistics for a date range
+
+### Compatibility note
+
+If you are using modern LangChain JavaScript packages such as:
+
+- `langchain@1.x`
+- `@langchain/openai@1.x`
+
+prefer the chat-model tool-calling flow shown above. In this package, Talor
+tools are lightweight descriptors rather than auto-executing LangChain tools,
+so the recommended pattern is:
+
+- let the model generate `tool_calls`
+- match the tool by `name`
+- execute it with `tool.execute(call.args)`
+- optionally feed the tool result back into your own agent loop
 
 ## Wrapper API
 

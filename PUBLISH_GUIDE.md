@@ -1,30 +1,29 @@
-# 使用和发布指南
+# Usage and Publishing Guide
 
-## 📦 本地使用
+## Local usage
 
-### 1. 作为本地包使用
+### 1. Use as a local package
 
-在你的项目中直接引用本地包：
+Install the package directly from a local path:
 
 ```bash
-# 在你的项目中
+# In your app
 npm install ../langchain_talor_serp_ts
 ```
 
-或者使用 npm link：
+Or use `npm link`:
 
 ```bash
-# 在 langchain_talor_serp_ts 目录
+# In the langchain_talor_serp_ts directory
 npm link
 
-# 在你的项目中
+# In your app
 npm link langchain-talor-serp
 ```
 
-### 2. 直接使用源代码
+### 2. Import source code directly
 
 ```typescript
-// 直接导入 TypeScript 文件
 import { TalorSerpAPIWrapper } from "../langchain_talor_serp_ts/src/index";
 
 const wrapper = new TalorSerpAPIWrapper({
@@ -32,80 +31,75 @@ const wrapper = new TalorSerpAPIWrapper({
 });
 ```
 
-## 🚀 发布到 npm
+## Publish to npm
 
-### 步骤 1: 准备发布
+### Step 1: Prepare the release
 
 ```bash
-# 1. 确保已登录 npm
+# 1. Make sure you are logged in
 npm login
 
-# 2. 检查包名是否可用
+# 2. Check whether the package name is available
 npm view langchain-talor-serp
 
-# 3. 更新版本号（如果需要）
+# 3. Bump the version if needed
 npm version patch   # 0.1.0 -> 0.1.1
 npm version minor   # 0.1.0 -> 0.2.0
 npm version major   # 0.1.0 -> 1.0.0
 ```
 
-### 步骤 2: 构建和发布
+### Step 2: Build and publish
 
 ```bash
-# 1. 构建项目
+# 1. Build the project
 npm run build
 
-# 2. 预览将要发布的文件
+# 2. Preview the files that will be published
 npm pack --dry-run
 
-# 3. 发布到 npm
+# 3. Publish to npm
 npm publish
 
-# 如果是 scoped 包（@your-org/package-name）
+# For a scoped package such as @your-org/package-name
 npm publish --access public
 ```
 
-### 步骤 3: 发布到私有 registry（可选）
+### Step 3: Publish to a private registry (optional)
 
 ```bash
-# 发布到私有 registry
+# Publish to a private registry
 npm publish --registry https://your-private-registry.com
 
-# 或者使用 .npmrc 文件
+# Or use an .npmrc file
 echo "registry=https://your-private-registry.com" > .npmrc
 npm publish
 ```
 
-## 📖 使用方法
+## Usage
 
-### 安装
+### Install
 
 ```bash
 npm install langchain-talor-serp
 ```
 
-### 基本使用
+### Basic usage
 
 ```typescript
-import { TalorSerpAPIWrapper, TalorSerpTool } from "langchain-talor-serp";
+import { TalorSerpAPIWrapper } from "langchain-talor-serp";
 
-// 设置 API 密钥
 process.env.TALOR_API_KEY = "your-token";
 
-// 创建包装器
 const wrapper = new TalorSerpAPIWrapper();
 
-// 基本搜索
 const results = await wrapper.run("TypeScript tutorial");
 console.log(results);
 
-// 引擎特定搜索
 const shopping = await wrapper.run("laptop", "google_shopping", {
   min_price: "500",
   max_price: "1000",
 });
 
-// 航班搜索
 const flights = await wrapper.run("flights", "google_flights", {
   departure_id: "SFO",
   arrival_id: "NRT",
@@ -113,56 +107,55 @@ const flights = await wrapper.run("flights", "google_flights", {
   return_date: "2025-03-15",
   adults: 2,
 });
+
+console.log(shopping);
+console.log(flights);
 ```
 
-### 使用工具
+### Tool usage
 
 ```typescript
 import { TalorSerpTool } from "langchain-talor-serp";
 
-// 创建工具
+process.env.TALOR_API_KEY = "your-token";
+
 const [searchTool, listEnginesTool] = TalorSerpTool.toolsFromApiKey("your-token");
 
-// 使用搜索工具
 const result = await searchTool.execute({
   query: "TypeScript",
   engine: "google",
   params: { gl: "us", hl: "en" },
 });
 
-// 列出所有引擎
 const engines = await listEnginesTool.execute({});
+console.log(result);
 console.log(engines);
 ```
 
-### 引擎信息
+### Engine metadata
 
 ```typescript
 import { TalorSerpAPIWrapper } from "langchain-talor-serp";
 
 const wrapper = new TalorSerpAPIWrapper();
 
-// 列出所有引擎
 const engines = wrapper.listEngines();
 console.log(`Total engines: ${engines.length}`);
 
-// 获取引擎描述
 const desc = wrapper.engineDescription("google_flights");
 console.log(desc);
 
-// 获取引擎参数 schema
 const schema = wrapper.engineParamSchema("google_shopping");
 console.log(schema);
 ```
 
-### 历史和统计
+### History and statistics
 
 ```typescript
 const wrapper = new TalorSerpAPIWrapper({
   talorApiKey: "your-token",
 });
 
-// 查询历史
 const history = await wrapper.history({
   page: 1,
   pageSize: 20,
@@ -170,112 +163,114 @@ const history = await wrapper.history({
   status: "success",
 });
 
-// 查询统计
 const stats = await wrapper.statistics({
   startDate: "2025-01-01",
   endDate: "2025-01-31",
   engines: "google,bing",
 });
+
+console.log(history);
+console.log(stats);
 ```
 
-## 🔧 配置选项
+## Configuration
 
-### TalorSerpAPIWrapper 配置
+### TalorSerpAPIWrapper options
 
 ```typescript
 const wrapper = new TalorSerpAPIWrapper({
-  talorApiKey: "your-token",      // API 密钥
-  engine: "google",               // 默认引擎
-  endpoint: "https://...",        // API 端点
-  gl: "us",                       // 国家代码
-  hl: "en",                       // 语言
-  device: "desktop",              // 设备类型
-  responseMode: "compact",        // 响应模式
-  timeout: 15000,                 // 超时时间（毫秒）
-  k: 5,                           // 结果数量
+  talorApiKey: "your-token",   // API key
+  engine: "google",            // default engine
+  endpoint: "https://...",     // API endpoint
+  gl: "us",                    // country code
+  hl: "en",                    // language
+  device: "desktop",           // device type
+  responseMode: "compact",     // response mode
+  timeout: 15000,              // timeout in ms
+  k: 5,                        // number of results
 });
 ```
 
-### 环境变量
+### Environment variables
 
 ```bash
-# 设置 API 密钥
+# Set the API key
 export TALOR_API_KEY="your-token"
 
-# 或者在 .env 文件中
+# Or in a .env file
 TALOR_API_KEY=your-token
 ```
 
-## 📝 发布检查清单
+## Release checklist
 
-发布前请确保：
+Before publishing, make sure that:
 
-- [ ] 更新 `package.json` 中的版本号
-- [ ] 运行 `npm run build` 确保编译成功
-- [ ] 运行 `npm test` 确保测试通过
-- [ ] 检查 `README.md` 文档是否完整
-- [ ] 确认 `files` 字段包含所有必要文件
-- [ ] 检查 `keywords` 是否合适
-- [ ] 确认 `license` 正确
+- [ ] `package.json` has the correct version
+- [ ] `npm run build` succeeds
+- [ ] `npm test` succeeds
+- [ ] `README.md` is up to date
+- [ ] the `files` field includes all required publishable files
+- [ ] the `keywords` are appropriate
+- [ ] the `license` is correct
 
-## 🐛 常见问题
+## Troubleshooting
 
-### 1. 编译错误
+### 1. Build errors
 
 ```bash
-# 清理并重新编译
+# Clean and rebuild
 npm run clean
 npm run build
 ```
 
-### 2. 类型错误
+### 2. Type errors
 
-确保安装了正确的类型定义：
+Make sure the required type packages are installed:
 
 ```bash
 npm install --save-dev @types/node typescript
 ```
 
-### 3. 发布权限错误
+### 3. Publish permission errors
 
 ```bash
-# 确保已登录
+# Make sure you are logged in
 npm login
 
-# 检查包名是否被占用
+# Check whether the package name is already taken
 npm view package-name
 ```
 
-### 4. 本地开发调试
+### 4. Local development and debugging
 
 ```bash
-# 使用 ts-node 直接运行 TypeScript
+# Run TypeScript directly with ts-node
 npx ts-node your-file.ts
 
-# 或者使用 nodemon 监听变化
+# Or watch changes with nodemon
 npx nodemon --exec ts-node your-file.ts
 ```
 
-## 📚 示例项目
+## Example projects
 
-查看 `examples/` 目录获取完整示例：
+Check the `examples/` directory for complete examples:
 
 ```bash
 cd examples
 npx ts-node basic-usage.ts
 ```
 
-## 🔗 相关资源
+## Resources
 
-- [npm 文档](https://docs.npmjs.com/)
-- [TypeScript 文档](https://www.typescriptlang.org/docs/)
-- [LangChain 文档](https://js.langchain.com/docs/)
+- [npm docs](https://docs.npmjs.com/)
+- [TypeScript docs](https://www.typescriptlang.org/docs/)
+- [LangChain docs](https://js.langchain.com/docs/)
 
-## 📞 获取帮助
+## Support
 
-如果遇到问题：
+If you run into issues:
 
-1. 查看 `README.md` 文档
-2. 查看 `MIGRATION.md` 迁移指南
-3. 检查 `IMPLEMENTATION_SUMMARY.md` 实现总结
-4. 在 GitHub 上提交 issue
+1. Read `README.md`
+2. Read `MIGRATION.md`
+3. Check `IMPLEMENTATION_SUMMARY.md`
+4. Open an issue on GitHub

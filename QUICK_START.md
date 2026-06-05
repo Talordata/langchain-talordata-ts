@@ -1,38 +1,51 @@
-# 🚀 快速开始
+# Quick Start
 
-## 安装
+## Installation
+
+Basic installation:
 
 ```bash
 npm install langchain-talor-serp
 ```
 
-## 基本使用
+If you want to use modern LangChain chat-model tool calling, install a model integration too:
+
+```bash
+npm install @langchain/openai
+```
+
+## 1. Set the API key
+
+```typescript
+process.env.TALOR_API_KEY = "your-token";
+```
+
+## 2. Simplest wrapper usage
 
 ```typescript
 import { TalorSerpAPIWrapper } from "langchain-talor-serp";
 
-// 设置 API 密钥
 process.env.TALOR_API_KEY = "your-token";
 
-// 创建包装器
 const wrapper = new TalorSerpAPIWrapper();
+const result = await wrapper.run("TypeScript tutorial");
 
-// 搜索
-const results = await wrapper.run("TypeScript tutorial");
-console.log(results);
+console.log(result);
 ```
 
-## 引擎特定搜索
+## 3. Search with a specific engine
 
 ```typescript
-// Google 购物
-await wrapper.run("laptop", "google_shopping", {
+import { TalorSerpAPIWrapper } from "langchain-talor-serp";
+
+const wrapper = new TalorSerpAPIWrapper();
+
+const shopping = await wrapper.run("laptop", "google_shopping", {
   min_price: "500",
   max_price: "1000",
 });
 
-// Google 航班
-await wrapper.run("flights", "google_flights", {
+const flights = await wrapper.run("flights", "google_flights", {
   departure_id: "SFO",
   arrival_id: "NRT",
   outbound_date: "2025-03-01",
@@ -40,85 +53,166 @@ await wrapper.run("flights", "google_flights", {
   adults: 2,
 });
 
-// Google 图片
-await wrapper.run("cats", "google_images", {
-  image_size: "large",
-  color: "blue",
-});
+console.log(shopping);
+console.log(flights);
 ```
 
-## 使用工具
+## 4. Use a tool descriptor directly
 
 ```typescript
 import { TalorSerpTool } from "langchain-talor-serp";
 
-// 创建工具
-const [searchTool, listTool] = TalorSerpTool.toolsFromApiKey("your-token");
+process.env.TALOR_API_KEY = "your-token";
 
-// 搜索
+const searchTool = TalorSerpTool.fromEnv();
+
 const result = await searchTool.execute({
   query: "TypeScript",
   engine: "google",
-  params: { gl: "us" },
+  params: {
+    gl: "us",
+    hl: "en",
+  },
 });
 
-// 列出引擎
-const engines = await listTool.execute({});
+console.log(result);
 ```
 
-## 引擎信息
+## 5. Modern LangChain tool-calling
+
+As in the Python package, the recommended pattern is: let the model generate
+`tool_calls`, then execute the selected tool in your own code.
 
 ```typescript
-// 列出所有引擎
+import { ChatOpenAI } from "@langchain/openai";
+import { TalorSerpTool } from "langchain-talor-serp";
+
+process.env.TALOR_API_KEY = "your-token";
+
+const llm = new ChatOpenAI({
+  model: "gpt-4o-mini",
+  temperature: 0,
+});
+
+const searchTool = TalorSerpTool.fromEnv();
+
+const modelWithTools = llm.bindTools([
+  {
+    type: "function",
+    function: {
+      name: searchTool.name,
+      description: searchTool.description,
+      parameters: searchTool.inputSchema,
+    },
+  },
+]);
+
+const response = await modelWithTools.invoke(
+  "Search for the latest LangChain news"
+);
+
+for (const call of response.tool_calls ?? []) {
+  if (call.name === searchTool.name) {
+    const toolResult = await searchTool.execute(call.args);
+    console.log(toolResult);
+  }
+}
+```
+
+## 6. Multiple tools
+
+```typescript
+import { ChatOpenAI } from "@langchain/openai";
+import { TalorSerpTool } from "langchain-talor-serp";
+
+const llm = new ChatOpenAI({
+  model: "gpt-4o-mini",
+  temperature: 0,
+});
+
+const tools = TalorSerpTool.toolsFromEnv();
+const toolsByName = Object.fromEntries(tools.map((tool) => [tool.name, tool]));
+
+const modelWithTools = llm.bindTools(
+  tools.map((tool) => ({
+    type: "function",
+    function: {
+      name: tool.name,
+      description: tool.description,
+      parameters: tool.inputSchema,
+    },
+  }))
+);
+
+const response = await modelWithTools.invoke(
+  "Show my SERP usage statistics for 2026-06-01 to 2026-06-05"
+);
+
+for (const call of response.tool_calls ?? []) {
+  const tool = toolsByName[call.name];
+  if (!tool) continue;
+
+  const result = await tool.execute(call.args);
+  console.log(call.name, result);
+}
+```
+
+## 7. Query history and statistics
+
+```typescript
+import { TalorSerpTool } from "langchain-talor-serp";
+
+const historyTool = TalorSerpTool.historyFromEnv();
+const statisticsTool = TalorSerpTool.statisticsFromEnv();
+
+const history = await historyTool.execute({
+  page: 1,
+  page_size: 20,
+  search_query: "langchain",
+  search_engine: "google",
+  status: "success",
+  timezone: "Asia/Shanghai",
+});
+
+const statistics = await statisticsTool.execute({
+  start_date: "2026-06-01",
+  end_date: "2026-06-05",
+  engines: "google,bing",
+  timezone: "+08:00",
+});
+
+console.log(history);
+console.log(statistics);
+```
+
+## 8. Inspect engine metadata
+
+```typescript
+import { TalorSerpAPIWrapper } from "langchain-talor-serp";
+
+const wrapper = new TalorSerpAPIWrapper();
+
 const engines = wrapper.listEngines();
-console.log(`Total: ${engines.length}`);
-
-// 获取引擎描述
 const desc = wrapper.engineDescription("google_flights");
-
-// 获取参数 schema
 const schema = wrapper.engineParamSchema("google_shopping");
+
+console.log(engines.length);
+console.log(desc);
+console.log(schema);
 ```
 
-## 发布到 npm
+## Development commands
 
 ```bash
-# 1. 登录 npm
-npm login
-
-# 2. 构建
-npm run build
-
-# 3. 发布
-npm publish
-```
-
-## 本地开发
-
-```bash
-# 安装依赖
 npm install
-
-# 构建
 npm run build
-
-# 运行测试
-npm test
-
-# 监视模式
 npm run dev
+npm test
 ```
 
-## 支持的引擎
+## More information
 
-- **Google**: 25 个引擎 (搜索、图片、新闻、购物、航班、酒店等)
-- **Bing**: 6 个引擎 (搜索、图片、新闻、购物等)
-- **Yandex**: 1 个引擎
-- **DuckDuckGo**: 1 个引擎
-
-## 更多信息
-
-- [完整文档](README.md)
-- [迁移指南](MIGRATION.md)
-- [发布指南](PUBLISH_GUIDE.md)
-- [实现总结](IMPLEMENTATION_SUMMARY.md)
+- [Full documentation](README.md)
+- [Migration guide](MIGRATION.md)
+- [Publish guide](PUBLISH_GUIDE.md)
+- [Implementation summary](IMPLEMENTATION_SUMMARY.md)
