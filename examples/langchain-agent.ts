@@ -1,5 +1,5 @@
 /**
- * Example: Using langchain-talor-serp with LangChain Agent
+ * Example: Using langchain-talordata with LangChain Agent
  *
  * This example shows how to integrate the Talor SERP tools
  * with a LangChain agent for web search capabilities.
@@ -107,7 +107,7 @@ To use with LangChain agent:
 import { ChatOpenAI } from "@langchain/openai";
 import { AgentExecutor, createToolCallingAgent } from "langchain/agents";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { TalorSerpTool } from "langchain-talor-serp";
+import { TalorSerpTool } from "langchain-talordata";
 
 // Create tools
 const [searchTool, listEnginesTool] = TalorSerpTool.toolsFromApiKey("your-key");

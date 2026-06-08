@@ -1,9 +1,9 @@
-# langchain-talor-serp
+# langchain-talordata
 
 **LangChain integration for TalorData's SERP APIs - TypeScript**
 
-[![npm version](https://img.shields.io/npm/v/langchain-talor-serp?color=blue)](https://www.npmjs.com/package/langchain-talor-serp)
-[![Node versions](https://img.shields.io/node/v/langchain-talor-serp)](https://www.npmjs.com/package/langchain-talor-serp)
+[![npm version](https://img.shields.io/npm/v/langchain-talordata?color=blue)](https://www.npmjs.com/package/langchain-talordata)
+[![Node versions](https://img.shields.io/node/v/langchain-talordata)](https://www.npmjs.com/package/langchain-talordata)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 [Installation](#installation) •
@@ -22,7 +22,7 @@ This package provides:
 
 ## Overview
 
-`langchain-talor-serp` provides TypeScript tools for [TalorData](https://talordata.com)'s SERP APIs, enabling your AI apps to:
+`langchain-talordata` provides TypeScript tools for [TalorData](https://talordata.com)'s SERP APIs, enabling your AI apps to:
 
 - **Search** - Query search engines with geo-targeting and language customization
 - **Inspect engines** - Discover supported engines and engine-specific parameters
@@ -32,7 +32,7 @@ This package provides:
 ## Installation
 
 ```bash
-npm install langchain-talor-serp
+npm install langchain-talordata
 ```
 
 If you want to use the modern LangChain chat-model tool-calling flow, install a model integration too:
@@ -56,7 +56,7 @@ process.env.TALOR_API_KEY = "your-token";
 ### 3. Wrapper usage
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talor-serp";
+import { TalorSerpAPIWrapper } from "langchain-talordata";
 
 const wrapper = new TalorSerpAPIWrapper();
 const result = await wrapper.run("LangChain tutorial");
@@ -72,7 +72,7 @@ TypeScript package, Talor tools are lightweight descriptors with `name`,
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";
-import { TalorSerpTool } from "langchain-talor-serp";
+import { TalorSerpTool } from "langchain-talordata";
 
 process.env.TALOR_API_KEY = "your-token";
 
@@ -111,7 +111,7 @@ for (const call of response.tool_calls ?? []) {
 ### 5. Search tool
 
 ```typescript
-import { TalorSerpTool } from "langchain-talor-serp";
+import { TalorSerpTool } from "langchain-talordata";
 
 const searchTool = TalorSerpTool.fromEnv();
 
@@ -149,7 +149,7 @@ const result = await searchTool.execute({
 ### 6. History tool
 
 ```typescript
-import { TalorSerpTool } from "langchain-talor-serp";
+import { TalorSerpTool } from "langchain-talordata";
 
 const historyTool = TalorSerpTool.historyFromEnv();
 
@@ -179,7 +179,7 @@ History parameters:
 ### 7. Statistics tool
 
 ```typescript
-import { TalorSerpTool } from "langchain-talor-serp";
+import { TalorSerpTool } from "langchain-talordata";
 
 const statisticsTool = TalorSerpTool.statisticsFromEnv();
 
@@ -204,7 +204,7 @@ Statistics parameters:
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";
-import { TalorSerpTool } from "langchain-talor-serp";
+import { TalorSerpTool } from "langchain-talordata";
 
 const llm = new ChatOpenAI({
   model: "gpt-4o-mini",
@@ -274,7 +274,7 @@ so the recommended pattern is:
 ## Wrapper API
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talor-serp";
+import { TalorSerpAPIWrapper } from "langchain-talordata";
 
 const wrapper = new TalorSerpAPIWrapper({
   talorApiKey: "your-token",
@@ -329,7 +329,7 @@ npm run clean
 
 ## Resources
 
-- npm: [langchain-talor-serp](https://www.npmjs.com/package/langchain-talor-serp)
+- npm: [langchain-talordata](https://www.npmjs.com/package/langchain-talordata)
 - TalorData: [talordata.com](https://talordata.com)
 - Quick start: [QUICK_START.md](QUICK_START.md)
 - Migration: [MIGRATION.md](MIGRATION.md)

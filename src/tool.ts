@@ -82,7 +82,7 @@ function _buildEngineParamsDescription(
 }
 
 export interface TalorSerpSearchInput {
-  query: string;
+  query?: string;
   engine?: string;
   params?: Record<string, any> | string;
 }
@@ -153,7 +153,7 @@ Available engines:
 ${enginesSummary}
 
 Parameters:
-  query: the search query (required)
+  query: the search query (optional)
   engine: engine key (default: google)
   params: engine-specific parameters as JSON object
 
@@ -170,7 +170,8 @@ Common params across all engines:
     properties: {
       query: {
         type: "string",
-        description: "The search query to execute.",
+        description:
+          "The search query to execute. Optional — some engines allow browsing without a query.",
       },
       engine: {
         type: "string",
@@ -183,7 +184,6 @@ Common params across all engines:
           "Engine-specific parameters as a JSON object. Common params: gl (country code, e.g. 'us'), hl (language, e.g. 'en'), device ('desktop'/'mobile'), location, no_cache (boolean). Each engine has unique params — check the engine schema for details. Example: {\"gl\": \"cn\", \"hl\": \"zh\", \"device\": \"mobile\"}",
       },
     },
-    required: ["query"],
   };
 
   return {

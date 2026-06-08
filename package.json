@@ -1,5 +1,5 @@
 {
-  "name": "langchain-talor-serp",
+  "name": "langchain-talordata",
   "version": "0.1.0",
   "description": "LangChain integration for Talor SERP API - TypeScript version",
   "main": "dist/index.js",

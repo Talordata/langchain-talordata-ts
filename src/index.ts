@@ -7,7 +7,7 @@
  * Quick start:
  * ```typescript
  * process.env.TALOR_API_KEY = "your-token";
- * import { TalorSerpAPIWrapper, TalorSerpTool } from "langchain-talor-serp";
+ * import { TalorSerpAPIWrapper, TalorSerpTool } from "langchain-talordata";
  *
  * const wrapper = new TalorSerpAPIWrapper();
  * await wrapper.run("LangChain tutorial");

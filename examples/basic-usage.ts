@@ -1,5 +1,5 @@
 /**
- * Basic usage examples for langchain-talor-serp
+ * Basic usage examples for langchain-talordata
  */
 
 import { TalorSerpAPIWrapper, TalorSerpTool } from "../dist/index";
@@ -123,7 +123,7 @@ async function historyAndStats() {
 
 // Run all examples
 async function main() {
-  console.log("🚀 langchain-talor-serp Examples\n");
+  console.log("🚀 langchain-talordata Examples\n");
 
   await basicSearch();
   await engineSpecificSearch();

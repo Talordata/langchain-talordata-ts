@@ -1,7 +1,7 @@
 @echo off
 REM Publish script (Windows)
 
-echo Starting publish for langchain-talor-serp...
+echo Starting publish for langchain-talordata...
 
 REM 1. Check npm login status
 echo 1. Checking npm login status...
@@ -44,7 +44,7 @@ npm pack --dry-run
 REM 6. Confirm publish
 echo.
 echo Ready to publish:
-echo - Package: langchain-talor-serp
+echo - Package: langchain-talordata
 echo - Version: (read from package.json)
 echo - Files: dist/, data/
 echo.
@@ -66,9 +66,9 @@ if %errorlevel% neq 0 (
 
 echo.
 echo Publish succeeded
-echo Package URL: https://www.npmjs.com/package/langchain-talor-serp
+echo Package URL: https://www.npmjs.com/package/langchain-talordata
 echo.
 echo Install with:
-echo   npm install langchain-talor-serp
+echo   npm install langchain-talordata
 echo.
 pause

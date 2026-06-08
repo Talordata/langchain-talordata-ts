@@ -206,7 +206,7 @@ export class TalorSerpAPIWrapper {
           headers: {
             Authorization: `Bearer ${apiKey}`,
             "Content-Type": "application/x-www-form-urlencoded",
-            Origin: "mcp",
+            Origin: "langchain_ts",
           },
         }
       );
@@ -433,7 +433,7 @@ export class TalorSerpAPIWrapper {
     const headers: Record<string, string> = {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/x-www-form-urlencoded",
-      Origin: "mcp",
+      Origin: "langchain_ts",
     };
     if (timezone) headers["X-Time-Zone"] = timezone;
 
@@ -489,7 +489,7 @@ export class TalorSerpAPIWrapper {
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/x-www-form-urlencoded",
-          Origin: "mcp",
+          Origin: "langchain_ts",
         },
       });
 

@@ -18,7 +18,7 @@ Or use `npm link`:
 npm link
 
 # In your app
-npm link langchain-talor-serp
+npm link langchain-talordata
 ```
 
 ### 2. Import source code directly
@@ -40,7 +40,7 @@ const wrapper = new TalorSerpAPIWrapper({
 npm login
 
 # 2. Check whether the package name is available
-npm view langchain-talor-serp
+npm view langchain-talordata
 
 # 3. Bump the version if needed
 npm version patch   # 0.1.0 -> 0.1.1
@@ -80,13 +80,13 @@ npm publish
 ### Install
 
 ```bash
-npm install langchain-talor-serp
+npm install langchain-talordata
 ```
 
 ### Basic usage
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talor-serp";
+import { TalorSerpAPIWrapper } from "langchain-talordata";
 
 process.env.TALOR_API_KEY = "your-token";
 
@@ -115,7 +115,7 @@ console.log(flights);
 ### Tool usage
 
 ```typescript
-import { TalorSerpTool } from "langchain-talor-serp";
+import { TalorSerpTool } from "langchain-talordata";
 
 process.env.TALOR_API_KEY = "your-token";
 
@@ -135,7 +135,7 @@ console.log(engines);
 ### Engine metadata
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talor-serp";
+import { TalorSerpAPIWrapper } from "langchain-talordata";
 
 const wrapper = new TalorSerpAPIWrapper();
 

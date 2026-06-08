@@ -77,7 +77,7 @@ langchain_talor_serp_ts/
 
 ### Basic Search
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talor-serp";
+import { TalorSerpAPIWrapper } from "langchain-talordata";
 
 const wrapper = new TalorSerpAPIWrapper({
   talorApiKey: "your-token",
@@ -106,7 +106,7 @@ const shopping = await wrapper.run("laptop", "google_shopping", {
 
 ### Using Tools
 ```typescript
-import { TalorSerpTool } from "langchain-talor-serp";
+import { TalorSerpTool } from "langchain-talordata";
 
 const [searchTool, listEnginesTool] = TalorSerpTool.toolsFromApiKey("your-token");
 
@@ -150,7 +150,7 @@ npm run clean
 
 ## Package Information
 
-- **Name**: langchain-talor-serp
+- **Name**: langchain-talordata
 - **Version**: 0.1.0
 - **License**: MIT
 - **Dependencies**: axios
