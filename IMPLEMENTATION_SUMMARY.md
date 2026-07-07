@@ -12,7 +12,7 @@ langchain_talor_serp_ts/
 │   ├── engines.ts         # Engine constants and types
 │   ├── schema.ts          # Engine schema loader and utilities
 │   ├── serialize.ts       # Parameter serialization
-│   ├── wrapper.ts         # TalorSerpAPIWrapper class
+│   ├── wrapper.ts         # TalorDataSerpAPIWrapper class
 │   ├── tool.ts            # LangChain tool adapters
 │   └── index.ts           # Main exports
 ├── data/                  # Engine JSON schemas (33 engines)
@@ -32,16 +32,16 @@ langchain_talor_serp_ts/
 - Provides engine discovery, categorization, and parameter information
 - Supports Google (25 engines), Bing (6 engines), Yandex, and DuckDuckGo
 
-### 2. TalorSerpAPIWrapper
+### 2. TalorDataSerpAPIWrapper
 - Full API wrapper with async/await support
 - Engine-aware parameter validation and serialization
 - Response processing with knowledge graph, answer box, and AI overview support
 - History and statistics endpoints
 
 ### 3. LangChain Tool Integration
-- `createTalorSerpTool()` - Create search tools for LangChain agents
-- `createTalorSerpListEnginesTool()` - Create engine discovery tools
-- `TalorSerpTool` factory class for easy tool creation
+- `createTalorDataSerpTool()` - Create search tools for LangChain agents
+- `createTalorDataSerpListEnginesTool()` - Create engine discovery tools
+- `TalorDataSerpTool` factory class for easy tool creation
 - Auto-generated tool descriptions from engine schemas
 
 ### 4. Type Safety
@@ -77,9 +77,9 @@ langchain_talor_serp_ts/
 
 ### Basic Search
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talordata";
+import { TalorDataSerpAPIWrapper } from "langchain-talordata";
 
-const wrapper = new TalorSerpAPIWrapper({
+const wrapper = new TalorDataSerpAPIWrapper({
   talorApiKey: "your-token",
 });
 
@@ -106,9 +106,9 @@ const shopping = await wrapper.run("laptop", "google_shopping", {
 
 ### Using Tools
 ```typescript
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
-const [searchTool, listEnginesTool] = TalorSerpTool.toolsFromApiKey("your-token");
+const [searchTool, listEnginesTool] = TalorDataSerpTool.toolsFromApiKey("your-token");
 
 // Search using tool
 const result = await searchTool.execute({

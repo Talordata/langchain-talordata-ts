@@ -7,12 +7,12 @@
  * Quick start:
  * ```typescript
  * process.env.TALOR_API_KEY = "your-token";
- * import { TalorSerpAPIWrapper, TalorSerpTool } from "langchain-talordata";
+ * import { TalorDataSerpAPIWrapper, TalorDataSerpTool } from "langchain-talordata";
  *
- * const wrapper = new TalorSerpAPIWrapper();
+ * const wrapper = new TalorDataSerpAPIWrapper();
  * await wrapper.run("LangChain tutorial");
  *
- * const tool = TalorSerpTool.fromEnv();
+ * const tool = TalorDataSerpTool.fromEnv();
  * ```
  */
 
@@ -31,21 +31,21 @@ export {
 } from "./schema";
 
 export {
-  TalorSerpAPIWrapper,
-  TalorSerpAPIWrapperOptions,
+  TalorDataSerpAPIWrapper,
+  TalorDataSerpAPIWrapperOptions,
   SearchResult,
 } from "./wrapper";
 
 export {
-  TalorSerpTool,
-  createTalorSerpHistoryTool,
-  createTalorSerpTool,
-  createTalorSerpListEnginesTool,
-  createTalorSerpStatisticsTool,
-  TalorSerpHistoryInput,
-  TalorSerpListEnginesInput,
-  TalorSerpSearchInput,
-  TalorSerpStatisticsInput,
+  TalorDataSerpTool,
+  createTalorDataSerpHistoryTool,
+  createTalorDataSerpTool,
+  createTalorDataSerpListEnginesTool,
+  createTalorDataSerpStatisticsTool,
+  TalorDataSerpHistoryInput,
+  TalorDataSerpListEnginesInput,
+  TalorDataSerpSearchInput,
+  TalorDataSerpStatisticsInput,
 } from "./tool";
 
 export {

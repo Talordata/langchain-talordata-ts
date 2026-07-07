@@ -30,7 +30,7 @@ function _getRegistry(): EngineRegistry {
   return _registry;
 }
 
-export interface TalorSerpAPIWrapperOptions {
+export interface TalorDataSerpAPIWrapperOptions {
   talorApiKey?: string;
   endpoint?: string;
   engine?: string;
@@ -50,7 +50,7 @@ export interface SearchResult {
   raw?: string;
 }
 
-export class TalorSerpAPIWrapper {
+export class TalorDataSerpAPIWrapper {
   private talorApiKey: string;
   private endpoint: string;
   private engine: string;
@@ -62,7 +62,7 @@ export class TalorSerpAPIWrapper {
   private k: number;
   private httpClient: AxiosInstance;
 
-  constructor(options: TalorSerpAPIWrapperOptions = {}) {
+  constructor(options: TalorDataSerpAPIWrapperOptions = {}) {
     this.talorApiKey = options.talorApiKey || "";
     this.endpoint = options.endpoint || _DEFAULT_ENDPOINT;
     this.engine = options.engine || DEFAULT_ENGINE;

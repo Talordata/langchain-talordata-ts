@@ -23,11 +23,11 @@ process.env.TALOR_API_KEY = "your-token";
 ## 2. Simplest wrapper usage
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talordata";
+import { TalorDataSerpAPIWrapper } from "langchain-talordata";
 
 process.env.TALOR_API_KEY = "your-token";
 
-const wrapper = new TalorSerpAPIWrapper();
+const wrapper = new TalorDataSerpAPIWrapper();
 const result = await wrapper.run("TypeScript tutorial");
 
 console.log(result);
@@ -36,9 +36,9 @@ console.log(result);
 ## 3. Search with a specific engine
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talordata";
+import { TalorDataSerpAPIWrapper } from "langchain-talordata";
 
-const wrapper = new TalorSerpAPIWrapper();
+const wrapper = new TalorDataSerpAPIWrapper();
 
 const shopping = await wrapper.run("laptop", "google_shopping", {
   min_price: "500",
@@ -60,11 +60,11 @@ console.log(flights);
 ## 4. Use a tool descriptor directly
 
 ```typescript
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
 process.env.TALOR_API_KEY = "your-token";
 
-const searchTool = TalorSerpTool.fromEnv();
+const searchTool = TalorDataSerpTool.fromEnv();
 
 const result = await searchTool.execute({
   query: "TypeScript",
@@ -85,7 +85,7 @@ As in the Python package, the recommended pattern is: let the model generate
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
 process.env.TALOR_API_KEY = "your-token";
 
@@ -94,7 +94,7 @@ const llm = new ChatOpenAI({
   temperature: 0,
 });
 
-const searchTool = TalorSerpTool.fromEnv();
+const searchTool = TalorDataSerpTool.fromEnv();
 
 const modelWithTools = llm.bindTools([
   {
@@ -123,14 +123,14 @@ for (const call of response.tool_calls ?? []) {
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
 const llm = new ChatOpenAI({
   model: "gpt-4o-mini",
   temperature: 0,
 });
 
-const tools = TalorSerpTool.toolsFromEnv();
+const tools = TalorDataSerpTool.toolsFromEnv();
 const toolsByName = Object.fromEntries(tools.map((tool) => [tool.name, tool]));
 
 const modelWithTools = llm.bindTools(
@@ -160,10 +160,10 @@ for (const call of response.tool_calls ?? []) {
 ## 7. Query history and statistics
 
 ```typescript
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
-const historyTool = TalorSerpTool.historyFromEnv();
-const statisticsTool = TalorSerpTool.statisticsFromEnv();
+const historyTool = TalorDataSerpTool.historyFromEnv();
+const statisticsTool = TalorDataSerpTool.statisticsFromEnv();
 
 const history = await historyTool.execute({
   page: 1,
@@ -188,9 +188,9 @@ console.log(statistics);
 ## 8. Inspect engine metadata
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talordata";
+import { TalorDataSerpAPIWrapper } from "langchain-talordata";
 
-const wrapper = new TalorSerpAPIWrapper();
+const wrapper = new TalorDataSerpAPIWrapper();
 
 const engines = wrapper.listEngines();
 const desc = wrapper.engineDescription("google_flights");

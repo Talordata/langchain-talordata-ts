@@ -5,7 +5,7 @@
  * with a LangChain agent for web search capabilities.
  */
 
-import { TalorSerpTool } from "../dist/index";
+import { TalorDataSerpTool } from "../dist/index";
 
 // Note: This example requires langchain to be installed
 // npm install langchain @langchain/openai
@@ -14,7 +14,7 @@ async function main() {
   console.log("🤖 LangChain Agent with Talor SERP Tools\n");
 
   // 1. Create tools
-  const [searchTool, listEnginesTool] = TalorSerpTool.toolsFromApiKey(
+  const [searchTool, listEnginesTool] = TalorDataSerpTool.toolsFromApiKey(
     process.env.TALOR_API_KEY || "your-api-key"
   );
 
@@ -107,10 +107,10 @@ To use with LangChain agent:
 import { ChatOpenAI } from "@langchain/openai";
 import { AgentExecutor, createToolCallingAgent } from "langchain/agents";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
 // Create tools
-const [searchTool, listEnginesTool] = TalorSerpTool.toolsFromApiKey("your-key");
+const [searchTool, listEnginesTool] = TalorDataSerpTool.toolsFromApiKey("your-key");
 
 // Create LLM
 const llm = new ChatOpenAI({

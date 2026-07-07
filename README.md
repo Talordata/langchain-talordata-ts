@@ -15,8 +15,8 @@ LangChain integration for the Talor SERP API.
 
 This package provides:
 
-- `TalorSerpAPIWrapper` for direct async API access
-- `TalorSerpTool` for creating tool descriptors for model tool routing
+- `TalorDataSerpAPIWrapper` for direct async API access
+- `TalorDataSerpTool` for creating tool descriptors for model tool routing
 - bundled engine schemas for 30+ search engines
 - support for search, history, and statistics endpoints
 
@@ -56,9 +56,9 @@ process.env.TALOR_API_KEY = "your-token";
 ### 3. Wrapper usage
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talordata";
+import { TalorDataSerpAPIWrapper } from "langchain-talordata";
 
-const wrapper = new TalorSerpAPIWrapper();
+const wrapper = new TalorDataSerpAPIWrapper();
 const result = await wrapper.run("LangChain tutorial");
 console.log(result);
 ```
@@ -72,7 +72,7 @@ TypeScript package, Talor tools are lightweight descriptors with `name`,
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
 process.env.TALOR_API_KEY = "your-token";
 
@@ -81,7 +81,7 @@ const llm = new ChatOpenAI({
   temperature: 0,
 });
 
-const searchTool = TalorSerpTool.fromEnv();
+const searchTool = TalorDataSerpTool.fromEnv();
 
 const modelWithTools = llm.bindTools([
   {
@@ -111,9 +111,9 @@ for (const call of response.tool_calls ?? []) {
 ### 5. Search tool
 
 ```typescript
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
-const searchTool = TalorSerpTool.fromEnv();
+const searchTool = TalorDataSerpTool.fromEnv();
 
 const result = await searchTool.execute({
   query: "LangChain tutorial",
@@ -149,9 +149,9 @@ const result = await searchTool.execute({
 ### 6. History tool
 
 ```typescript
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
-const historyTool = TalorSerpTool.historyFromEnv();
+const historyTool = TalorDataSerpTool.historyFromEnv();
 
 const result = await historyTool.execute({
   page: 1,
@@ -179,9 +179,9 @@ History parameters:
 ### 7. Statistics tool
 
 ```typescript
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
-const statisticsTool = TalorSerpTool.statisticsFromEnv();
+const statisticsTool = TalorDataSerpTool.statisticsFromEnv();
 
 const result = await statisticsTool.execute({
   start_date: "2026-06-01",
@@ -204,14 +204,14 @@ Statistics parameters:
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
 const llm = new ChatOpenAI({
   model: "gpt-4o-mini",
   temperature: 0,
 });
 
-const tools = TalorSerpTool.toolsFromEnv();
+const tools = TalorDataSerpTool.toolsFromEnv();
 const toolsByName = Object.fromEntries(tools.map((tool) => [tool.name, tool]));
 
 const modelWithTools = llm.bindTools(
@@ -274,9 +274,9 @@ so the recommended pattern is:
 ## Wrapper API
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talordata";
+import { TalorDataSerpAPIWrapper } from "langchain-talordata";
 
-const wrapper = new TalorSerpAPIWrapper({
+const wrapper = new TalorDataSerpAPIWrapper({
   talorApiKey: "your-token",
   engine: "google",
   gl: "us",

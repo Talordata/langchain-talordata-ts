@@ -7,8 +7,8 @@
  * Without TALOR_API_KEY, all tests are skipped.
  */
 
-import { TalorSerpAPIWrapper } from "../src/wrapper";
-import { createTalorSerpTool, createTalorSerpListEnginesTool } from "../src/tool";
+import { TalorDataSerpAPIWrapper } from "../src/wrapper";
+import { createTalorDataSerpTool, createTalorDataSerpListEnginesTool } from "../src/tool";
 
 const API_KEY = process.env.TALOR_API_KEY || "";
 
@@ -17,14 +17,14 @@ jest.setTimeout(30000);
 
 const describeIfKey = API_KEY ? describe : describe.skip;
 
-function makeWrapper(): TalorSerpAPIWrapper {
-  return new TalorSerpAPIWrapper({ talorApiKey: API_KEY });
+function makeWrapper(): TalorDataSerpAPIWrapper {
+  return new TalorDataSerpAPIWrapper({ talorApiKey: API_KEY });
 }
 
 // ---------- Wrapper.results() ----------
 
 describeIfKey("Wrapper.results() integration", () => {
-  let wrapper: TalorSerpAPIWrapper;
+  let wrapper: TalorDataSerpAPIWrapper;
 
   beforeEach(() => {
     wrapper = makeWrapper();
@@ -80,7 +80,7 @@ describeIfKey("Wrapper.results() integration", () => {
 // ---------- Wrapper.run() ----------
 
 describeIfKey("Wrapper.run() integration", () => {
-  let wrapper: TalorSerpAPIWrapper;
+  let wrapper: TalorDataSerpAPIWrapper;
 
   beforeEach(() => {
     wrapper = makeWrapper();
@@ -101,7 +101,7 @@ describeIfKey("Wrapper.run() integration", () => {
 // ---------- Engine info ----------
 
 describeIfKey("Engine info integration", () => {
-  let wrapper: TalorSerpAPIWrapper;
+  let wrapper: TalorDataSerpAPIWrapper;
 
   beforeEach(() => {
     wrapper = makeWrapper();
@@ -128,7 +128,7 @@ describeIfKey("Engine info integration", () => {
 // ---------- History & Statistics ----------
 
 describeIfKey("History integration", () => {
-  let wrapper: TalorSerpAPIWrapper;
+  let wrapper: TalorDataSerpAPIWrapper;
 
   beforeEach(() => {
     wrapper = makeWrapper();
@@ -153,7 +153,7 @@ describeIfKey("History integration", () => {
 describeIfKey("Tool integration", () => {
   it("should execute search tool", async () => {
     const wrapper = makeWrapper();
-    const tool = createTalorSerpTool(wrapper);
+    const tool = createTalorDataSerpTool(wrapper);
     const result = await tool.execute({ query: "hello" });
     expect(typeof result).toBe("string");
     expect(result.length).toBeGreaterThan(0);
@@ -161,7 +161,7 @@ describeIfKey("Tool integration", () => {
 
   it("should execute list engines tool", async () => {
     const wrapper = makeWrapper();
-    const tool = createTalorSerpListEnginesTool(wrapper);
+    const tool = createTalorDataSerpListEnginesTool(wrapper);
     const result = await tool.execute({});
     expect(result).toContain("Total engines:");
     expect(result).toContain("google");

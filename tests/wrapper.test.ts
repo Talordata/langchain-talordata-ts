@@ -1,16 +1,16 @@
-import { TalorSerpAPIWrapper, SearchResult } from "../src/wrapper";
+import { TalorDataSerpAPIWrapper, SearchResult } from "../src/wrapper";
 import axios from "axios";
 
 // Mock axios
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-describe("TalorSerpAPIWrapper", () => {
-  let wrapper: TalorSerpAPIWrapper;
+describe("TalorDataSerpAPIWrapper", () => {
+  let wrapper: TalorDataSerpAPIWrapper;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    wrapper = new TalorSerpAPIWrapper({ talorApiKey: "test-key" });
+    wrapper = new TalorDataSerpAPIWrapper({ talorApiKey: "test-key" });
 
     // Setup mock axios instance
     const mockPost = jest.fn();
@@ -24,12 +24,12 @@ describe("TalorSerpAPIWrapper", () => {
 
   describe("constructor", () => {
     it("should set default values", () => {
-      const w = new TalorSerpAPIWrapper({ talorApiKey: "key" });
+      const w = new TalorDataSerpAPIWrapper({ talorApiKey: "key" });
       expect(w).toBeDefined();
     });
 
     it("should use provided options", () => {
-      const w = new TalorSerpAPIWrapper({
+      const w = new TalorDataSerpAPIWrapper({
         talorApiKey: "key",
         engine: "bing",
         gl: "cn",

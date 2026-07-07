@@ -11,7 +11,7 @@ import {
   requiredFields,
   toDescription,
 } from "./schema";
-import { TalorSerpAPIWrapper, TalorSerpAPIWrapperOptions } from "./wrapper";
+import { TalorDataSerpAPIWrapper, TalorDataSerpAPIWrapperOptions } from "./wrapper";
 
 function _buildEnginesSummary(registry: EngineRegistry): string {
   const lines: string[] = [];
@@ -81,13 +81,13 @@ function _buildEngineParamsDescription(
   return lines.join("\n");
 }
 
-export interface TalorSerpSearchInput {
+export interface TalorDataSerpSearchInput {
   query?: string;
   engine?: string;
   params?: Record<string, any> | string;
 }
 
-export interface TalorSerpHistoryInput {
+export interface TalorDataSerpHistoryInput {
   page?: number;
   page_size?: number;
   search_query?: string;
@@ -98,14 +98,14 @@ export interface TalorSerpHistoryInput {
   timezone?: string;
 }
 
-export interface TalorSerpStatisticsInput {
+export interface TalorDataSerpStatisticsInput {
   start_date: string;
   end_date: string;
   engines?: string;
   timezone?: string;
 }
 
-export interface TalorSerpListEnginesInput {
+export interface TalorDataSerpListEnginesInput {
   engine?: string;
   args?: string;
 }
@@ -133,14 +133,14 @@ function parseParamsInput(
   return params;
 }
 
-export function createTalorSerpTool(
-  wrapper?: TalorSerpAPIWrapper,
+export function createTalorDataSerpTool(
+  wrapper?: TalorDataSerpAPIWrapper,
   name: string = "talor_serp_search",
   description?: string
-): TalorTool<TalorSerpSearchInput, string> {
+): TalorTool<TalorDataSerpSearchInput, string> {
   if (!wrapper) {
     const apiKey = process.env.TALOR_API_KEY || "";
-    wrapper = new TalorSerpAPIWrapper({ talorApiKey: apiKey });
+    wrapper = new TalorDataSerpAPIWrapper({ talorApiKey: apiKey });
   }
 
   const registry = (wrapper as any)._registry();
@@ -190,21 +190,21 @@ Common params across all engines:
     name,
     description,
     inputSchema,
-    execute: async (input: TalorSerpSearchInput): Promise<string> => {
+    execute: async (input: TalorDataSerpSearchInput): Promise<string> => {
       const extra = parseParamsInput(input.params);
       return wrapper!.run(input.query, input.engine, extra);
     },
   };
 }
 
-export function createTalorSerpHistoryTool(
-  wrapper?: TalorSerpAPIWrapper,
+export function createTalorDataSerpHistoryTool(
+  wrapper?: TalorDataSerpAPIWrapper,
   name: string = "talor_serp_history",
   description?: string
-): TalorTool<TalorSerpHistoryInput, any> {
+): TalorTool<TalorDataSerpHistoryInput, any> {
   if (!wrapper) {
     const apiKey = process.env.TALOR_API_KEY || "";
-    wrapper = new TalorSerpAPIWrapper({ talorApiKey: apiKey });
+    wrapper = new TalorDataSerpAPIWrapper({ talorApiKey: apiKey });
   }
 
   return {
@@ -253,7 +253,7 @@ Parameters:
         },
       },
     },
-    execute: async (input: TalorSerpHistoryInput) =>
+    execute: async (input: TalorDataSerpHistoryInput) =>
       wrapper!.history({
         page: input.page,
         pageSize: input.page_size,
@@ -267,13 +267,13 @@ Parameters:
   };
 }
 
-export function createTalorSerpListEnginesTool(
-  wrapper?: TalorSerpAPIWrapper,
+export function createTalorDataSerpListEnginesTool(
+  wrapper?: TalorDataSerpAPIWrapper,
   name: string = "talor_serp_list_engines"
-): TalorTool<TalorSerpListEnginesInput, string> {
+): TalorTool<TalorDataSerpListEnginesInput, string> {
   if (!wrapper) {
     const apiKey = process.env.TALOR_API_KEY || "";
-    wrapper = new TalorSerpAPIWrapper({ talorApiKey: apiKey });
+    wrapper = new TalorDataSerpAPIWrapper({ talorApiKey: apiKey });
   }
 
   const registry = (wrapper as any)._registry();
@@ -296,7 +296,7 @@ export function createTalorSerpListEnginesTool(
         },
       },
     },
-    execute: async (input: TalorSerpListEnginesInput): Promise<string> => {
+    execute: async (input: TalorDataSerpListEnginesInput): Promise<string> => {
       const engine = input.engine || input.args;
       if (engine) {
         const schema = registry.engine(engine);
@@ -326,14 +326,14 @@ export function createTalorSerpListEnginesTool(
   };
 }
 
-export function createTalorSerpStatisticsTool(
-  wrapper?: TalorSerpAPIWrapper,
+export function createTalorDataSerpStatisticsTool(
+  wrapper?: TalorDataSerpAPIWrapper,
   name: string = "talor_serp_statistics",
   description?: string
-): TalorTool<TalorSerpStatisticsInput, any> {
+): TalorTool<TalorDataSerpStatisticsInput, any> {
   if (!wrapper) {
     const apiKey = process.env.TALOR_API_KEY || "";
-    wrapper = new TalorSerpAPIWrapper({ talorApiKey: apiKey });
+    wrapper = new TalorDataSerpAPIWrapper({ talorApiKey: apiKey });
   }
 
   return {
@@ -369,7 +369,7 @@ Parameters:
       },
       required: ["start_date", "end_date"],
     },
-    execute: async (input: TalorSerpStatisticsInput) =>
+    execute: async (input: TalorDataSerpStatisticsInput) =>
       wrapper!.statistics({
         startDate: input.start_date,
         endDate: input.end_date,
@@ -379,97 +379,97 @@ Parameters:
   };
 }
 
-export class TalorSerpTool {
+export class TalorDataSerpTool {
   static fromApiKey(
     apiKey: string,
     engine: string = "google",
     endpoint: string = "https://serpapi.talordata.net/serp/v1/request",
-    options?: Partial<TalorSerpAPIWrapperOptions>
-  ): ReturnType<typeof createTalorSerpTool> {
-    const wrapper = new TalorSerpAPIWrapper({
+    options?: Partial<TalorDataSerpAPIWrapperOptions>
+  ): ReturnType<typeof createTalorDataSerpTool> {
+    const wrapper = new TalorDataSerpAPIWrapper({
       talorApiKey: apiKey,
       engine,
       endpoint,
       ...options,
     });
-    return createTalorSerpTool(wrapper);
+    return createTalorDataSerpTool(wrapper);
   }
 
   static fromEnv(
-    options?: Partial<TalorSerpAPIWrapperOptions>
-  ): ReturnType<typeof createTalorSerpTool> {
+    options?: Partial<TalorDataSerpAPIWrapperOptions>
+  ): ReturnType<typeof createTalorDataSerpTool> {
     if (!options) {
-      return createTalorSerpTool(undefined, undefined, undefined);
+      return createTalorDataSerpTool(undefined, undefined, undefined);
     }
     const apiKey = process.env.TALOR_API_KEY || "";
-    const wrapper = new TalorSerpAPIWrapper({ talorApiKey: apiKey, ...options });
-    return createTalorSerpTool(wrapper);
+    const wrapper = new TalorDataSerpAPIWrapper({ talorApiKey: apiKey, ...options });
+    return createTalorDataSerpTool(wrapper);
   }
 
   static fromWrapper(
-    wrapper: TalorSerpAPIWrapper,
-    options?: Partial<TalorSerpAPIWrapperOptions>
-  ): ReturnType<typeof createTalorSerpTool> {
-    return createTalorSerpTool(wrapper);
+    wrapper: TalorDataSerpAPIWrapper,
+    options?: Partial<TalorDataSerpAPIWrapperOptions>
+  ): ReturnType<typeof createTalorDataSerpTool> {
+    return createTalorDataSerpTool(wrapper);
   }
 
   static historyFromEnv(
-    options?: Partial<TalorSerpAPIWrapperOptions>
-  ): ReturnType<typeof createTalorSerpHistoryTool> {
+    options?: Partial<TalorDataSerpAPIWrapperOptions>
+  ): ReturnType<typeof createTalorDataSerpHistoryTool> {
     if (!options) {
-      return createTalorSerpHistoryTool();
+      return createTalorDataSerpHistoryTool();
     }
     const apiKey = process.env.TALOR_API_KEY || "";
-    const wrapper = new TalorSerpAPIWrapper({ talorApiKey: apiKey, ...options });
-    return createTalorSerpHistoryTool(wrapper);
+    const wrapper = new TalorDataSerpAPIWrapper({ talorApiKey: apiKey, ...options });
+    return createTalorDataSerpHistoryTool(wrapper);
   }
 
   static historyFromWrapper(
-    wrapper: TalorSerpAPIWrapper
-  ): ReturnType<typeof createTalorSerpHistoryTool> {
-    return createTalorSerpHistoryTool(wrapper);
+    wrapper: TalorDataSerpAPIWrapper
+  ): ReturnType<typeof createTalorDataSerpHistoryTool> {
+    return createTalorDataSerpHistoryTool(wrapper);
   }
 
   static statisticsFromEnv(
-    options?: Partial<TalorSerpAPIWrapperOptions>
-  ): ReturnType<typeof createTalorSerpStatisticsTool> {
+    options?: Partial<TalorDataSerpAPIWrapperOptions>
+  ): ReturnType<typeof createTalorDataSerpStatisticsTool> {
     if (!options) {
-      return createTalorSerpStatisticsTool();
+      return createTalorDataSerpStatisticsTool();
     }
     const apiKey = process.env.TALOR_API_KEY || "";
-    const wrapper = new TalorSerpAPIWrapper({ talorApiKey: apiKey, ...options });
-    return createTalorSerpStatisticsTool(wrapper);
+    const wrapper = new TalorDataSerpAPIWrapper({ talorApiKey: apiKey, ...options });
+    return createTalorDataSerpStatisticsTool(wrapper);
   }
 
   static statisticsFromWrapper(
-    wrapper: TalorSerpAPIWrapper
-  ): ReturnType<typeof createTalorSerpStatisticsTool> {
-    return createTalorSerpStatisticsTool(wrapper);
+    wrapper: TalorDataSerpAPIWrapper
+  ): ReturnType<typeof createTalorDataSerpStatisticsTool> {
+    return createTalorDataSerpStatisticsTool(wrapper);
   }
 
   static toolsFromEnv(
-    options?: Partial<TalorSerpAPIWrapperOptions>
+    options?: Partial<TalorDataSerpAPIWrapperOptions>
   ): Array<TalorTool<any, any>> {
     const apiKey = process.env.TALOR_API_KEY || "";
-    const wrapper = new TalorSerpAPIWrapper({ talorApiKey: apiKey, ...options });
+    const wrapper = new TalorDataSerpAPIWrapper({ talorApiKey: apiKey, ...options });
     return [
-      createTalorSerpTool(wrapper),
-      createTalorSerpListEnginesTool(wrapper),
-      createTalorSerpHistoryTool(wrapper),
-      createTalorSerpStatisticsTool(wrapper),
+      createTalorDataSerpTool(wrapper),
+      createTalorDataSerpListEnginesTool(wrapper),
+      createTalorDataSerpHistoryTool(wrapper),
+      createTalorDataSerpStatisticsTool(wrapper),
     ];
   }
 
   static toolsFromApiKey(
     apiKey: string,
-    options?: Partial<TalorSerpAPIWrapperOptions>
+    options?: Partial<TalorDataSerpAPIWrapperOptions>
   ): Array<TalorTool<any, any>> {
-    const wrapper = new TalorSerpAPIWrapper({ talorApiKey: apiKey, ...options });
+    const wrapper = new TalorDataSerpAPIWrapper({ talorApiKey: apiKey, ...options });
     return [
-      createTalorSerpTool(wrapper),
-      createTalorSerpListEnginesTool(wrapper),
-      createTalorSerpHistoryTool(wrapper),
-      createTalorSerpStatisticsTool(wrapper),
+      createTalorDataSerpTool(wrapper),
+      createTalorDataSerpListEnginesTool(wrapper),
+      createTalorDataSerpHistoryTool(wrapper),
+      createTalorDataSerpStatisticsTool(wrapper),
     ];
   }
 }

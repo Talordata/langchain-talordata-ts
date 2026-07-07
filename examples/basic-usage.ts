@@ -2,13 +2,13 @@
  * Basic usage examples for langchain-talordata
  */
 
-import { TalorSerpAPIWrapper, TalorSerpTool } from "../dist/index";
+import { TalorDataSerpAPIWrapper, TalorDataSerpTool } from "../dist/index";
 
 // Example 1: Basic search
 async function basicSearch() {
   console.log("=== Basic Search ===");
 
-  const wrapper = new TalorSerpAPIWrapper({
+  const wrapper = new TalorDataSerpAPIWrapper({
     talorApiKey: process.env.TALOR_API_KEY || "your-api-key",
   });
 
@@ -24,7 +24,7 @@ async function basicSearch() {
 async function engineSpecificSearch() {
   console.log("\n=== Engine-Specific Search ===");
 
-  const wrapper = new TalorSerpAPIWrapper({
+  const wrapper = new TalorDataSerpAPIWrapper({
     talorApiKey: process.env.TALOR_API_KEY || "your-api-key",
   });
 
@@ -45,7 +45,7 @@ async function engineSpecificSearch() {
 async function usingTools() {
   console.log("\n=== Using Tools ===");
 
-  const [searchTool, listEnginesTool] = TalorSerpTool.toolsFromApiKey(
+  const [searchTool, listEnginesTool] = TalorDataSerpTool.toolsFromApiKey(
     process.env.TALOR_API_KEY || "your-api-key"
   );
 
@@ -74,7 +74,7 @@ async function usingTools() {
 async function getEngineInfo() {
   console.log("\n=== Engine Information ===");
 
-  const wrapper = new TalorSerpAPIWrapper();
+  const wrapper = new TalorDataSerpAPIWrapper();
 
   // Get Google Flights parameters
   const flightsSchema = wrapper.engineParamSchema("google_flights");
@@ -93,7 +93,7 @@ async function getEngineInfo() {
 async function historyAndStats() {
   console.log("\n=== History and Statistics ===");
 
-  const wrapper = new TalorSerpAPIWrapper({
+  const wrapper = new TalorDataSerpAPIWrapper({
     talorApiKey: process.env.TALOR_API_KEY || "your-api-key",
   });
 

@@ -24,9 +24,9 @@ npm link langchain-talordata
 ### 2. Import source code directly
 
 ```typescript
-import { TalorSerpAPIWrapper } from "../langchain_talor_serp_ts/src/index";
+import { TalorDataSerpAPIWrapper } from "../langchain_talor_serp_ts/src/index";
 
-const wrapper = new TalorSerpAPIWrapper({
+const wrapper = new TalorDataSerpAPIWrapper({
   talorApiKey: "your-token",
 });
 ```
@@ -86,11 +86,11 @@ npm install langchain-talordata
 ### Basic usage
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talordata";
+import { TalorDataSerpAPIWrapper } from "langchain-talordata";
 
 process.env.TALOR_API_KEY = "your-token";
 
-const wrapper = new TalorSerpAPIWrapper();
+const wrapper = new TalorDataSerpAPIWrapper();
 
 const results = await wrapper.run("TypeScript tutorial");
 console.log(results);
@@ -115,11 +115,11 @@ console.log(flights);
 ### Tool usage
 
 ```typescript
-import { TalorSerpTool } from "langchain-talordata";
+import { TalorDataSerpTool } from "langchain-talordata";
 
 process.env.TALOR_API_KEY = "your-token";
 
-const [searchTool, listEnginesTool] = TalorSerpTool.toolsFromApiKey("your-token");
+const [searchTool, listEnginesTool] = TalorDataSerpTool.toolsFromApiKey("your-token");
 
 const result = await searchTool.execute({
   query: "TypeScript",
@@ -135,9 +135,9 @@ console.log(engines);
 ### Engine metadata
 
 ```typescript
-import { TalorSerpAPIWrapper } from "langchain-talordata";
+import { TalorDataSerpAPIWrapper } from "langchain-talordata";
 
-const wrapper = new TalorSerpAPIWrapper();
+const wrapper = new TalorDataSerpAPIWrapper();
 
 const engines = wrapper.listEngines();
 console.log(`Total engines: ${engines.length}`);
@@ -152,7 +152,7 @@ console.log(schema);
 ### History and statistics
 
 ```typescript
-const wrapper = new TalorSerpAPIWrapper({
+const wrapper = new TalorDataSerpAPIWrapper({
   talorApiKey: "your-token",
 });
 
@@ -175,10 +175,10 @@ console.log(stats);
 
 ## Configuration
 
-### TalorSerpAPIWrapper options
+### TalorDataSerpAPIWrapper options
 
 ```typescript
-const wrapper = new TalorSerpAPIWrapper({
+const wrapper = new TalorDataSerpAPIWrapper({
   talorApiKey: "your-token",   // API key
   engine: "google",            // default engine
   endpoint: "https://...",     // API endpoint

@@ -3,8 +3,8 @@
  */
 
 import {
-  TalorSerpAPIWrapper,
-  TalorSerpTool,
+  TalorDataSerpAPIWrapper,
+  TalorDataSerpTool,
   EngineRegistry,
   SUPPORTED_ENGINES,
   ENGINE_CATEGORIES,
@@ -38,10 +38,10 @@ async function testEngineRegistry() {
 }
 
 async function testWrapper() {
-  console.log("\n=== Testing TalorSerpAPIWrapper ===");
+  console.log("\n=== Testing TalorDataSerpAPIWrapper ===");
 
   // Note: This will fail without a valid API key
-  const wrapper = new TalorSerpAPIWrapper({
+  const wrapper = new TalorDataSerpAPIWrapper({
     talorApiKey: "test-key",
   });
 
@@ -59,12 +59,12 @@ async function testWrapper() {
 async function testTools() {
   console.log("\n=== Testing Tools ===");
 
-  const tool = TalorSerpTool.fromApiKey("test-key");
+  const tool = TalorDataSerpTool.fromApiKey("test-key");
   console.log(`Tool name: ${tool.name}`);
   console.log(`Tool description length: ${tool.description.length}`);
   console.log(`Input schema properties: ${Object.keys(tool.inputSchema.properties || {}).length}`);
 
-  const listTool = TalorSerpTool.toolsFromApiKey("test-key");
+  const listTool = TalorDataSerpTool.toolsFromApiKey("test-key");
   console.log(`Tools count: ${listTool.length}`);
 }
 
