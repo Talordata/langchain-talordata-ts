@@ -1,61 +1,66 @@
-# langchain-talordata
+# langchain (js)
 
-**LangChain integration for TalorData's SERP APIs - TypeScript**
+**LangChain integration for TalorData SERP API**
 
-[![npm version](https://img.shields.io/npm/v/langchain-talordata?color=blue)](https://www.npmjs.com/package/langchain-talordata)
-[![Node versions](https://img.shields.io/node/v/langchain-talordata)](https://www.npmjs.com/package/langchain-talordata)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[Installation](https://github.com/Talordata/langchain-talordata/edit/main/README.md#installation) • [Quick Start](https://github.com/Talordata/langchain-talordata/edit/main/README.md#quick-start) • [Tools](https://github.com/Talordata/langchain-talordata/edit/main/README.md#tools) • [Resources](https://github.com/Talordata/langchain-talordata/edit/main/README.md#resources)
 
-[Installation](#installation) •
-[Quick Start](#quick-start) •
-[Tools](#tools) •
-[Resources](#resources)
+PyPI version Python versions License: MIT
 
-LangChain integration for the Talor SERP API.
+TalorData helps developers and AI applications connect to real-time, structured, and reliable search data through a single SERP API. With support for Google, Bing, News, Images, Shopping, Maps, Scholar, Trends, and more, TalorData makes it easier to build AI agents, search copilots, SEO workflows, and data-driven automations powered by live search results.
 
-This package provides:
+The langchain-talordata package brings TalorData’s real-time search capabilities into LangChain, so you can add live search, engine inspection, request history, and usage analytics directly to your LLM workflows and AI agent systems.
 
-- `TalorDataSerpAPIWrapper` for direct async API access
-- `TalorDataSerpTool` for creating tool descriptors for model tool routing
-- bundled engine schemas for 30+ search engines
-- support for search, history, and statistics endpoints
+**Overview**
 
-## Overview
+langchain-talordata provides LangChain tools for [TalorData](https://www.talordata.com/serp-api/langchain?campaignid=1cypxmLvv6k0zrDj&utm_source=langchain&utm_term=langchain29) SERP API, enabling your AI agents to:
 
-`langchain-talordata` provides TypeScript tools for [TalorData](https://talordata.com)'s SERP APIs, enabling your AI apps to:
+*   **Search** - Query search engines with geo-targeting and language customization
+    
+*   **Inspect engines** - Discover supported engines and engine-specific parameters
+    
+*   **Query history** - Fetch SERP request history with filters
+    
+*   **View statistics** - Retrieve usage statistics by date range and engine
+    
 
-- **Search** - Query search engines with geo-targeting and language customization
-- **Inspect engines** - Discover supported engines and engine-specific parameters
-- **Query history** - Fetch SERP request history with filters
-- **View statistics** - Retrieve usage statistics by date range and engine
+**This package provides:**
+
+*   TalorDataSerpAPIWrapper for direct sync and async API access
+    
+*   TalorDataSerpTool for creating LangChain tools
+    
+*   20+ search types across four major search engines
+    
+*   support for search, history, and statistics endpoints
+    
 
 ## Installation
 
-```bash
+```plaintext
 npm install langchain-talordata
 ```
 
-If you want to use the modern LangChain chat-model tool-calling flow, install a model integration too:
+If you want to use the modern LangChain chat-model tool-calling flow, install a model integration too:
 
-```bash
+```plaintext
 npm install @langchain/openai
 ```
 
-## Quick Start
+## Quick Start
 
-### 1. Get your API key
+### 1. Get your API key
 
-Sign up at [TalorData](https://talordata.com) and get your API key from the dashboard.
+Sign up at [TalorData](https://talordata.com/) and get your API key from the dashboard.
 
-### 2. Set up authentication
+### 2. Set up authentication
 
-```typescript
+```plaintext
 process.env.TALOR_API_KEY = "your-token";
 ```
 
-### 3. Wrapper usage
+### 3. Wrapper usage
 
-```typescript
+```plaintext
 import { TalorDataSerpAPIWrapper } from "langchain-talordata";
 
 const wrapper = new TalorDataSerpAPIWrapper();
@@ -63,14 +68,11 @@ const result = await wrapper.run("LangChain tutorial");
 console.log(result);
 ```
 
-### 4. Modern tool-calling usage
+### 4. Modern tool-calling usage
 
-Like the Python version, the recommended modern flow is: bind tools to a chat
-model, let the model emit `tool_calls`, then execute the chosen tool. In the
-TypeScript package, Talor tools are lightweight descriptors with `name`,
-`description`, `inputSchema`, and `execute(input)`.
+Like the Python version, the recommended modern flow is: bind tools to a chat model, let the model emit , then execute the chosen tool. In the TypeScript package, Talor tools are lightweight descriptors with , , , and .`tool_calls``name``description``inputSchema``execute(input)`
 
-```typescript
+```plaintext
 import { ChatOpenAI } from "@langchain/openai";
 import { TalorDataSerpTool } from "langchain-talordata";
 
@@ -108,9 +110,9 @@ for (const call of response.tool_calls ?? []) {
 }
 ```
 
-### 5. Search tool
+### 5. Search tool
 
-```typescript
+```plaintext
 import { TalorDataSerpTool } from "langchain-talordata";
 
 const searchTool = TalorDataSerpTool.fromEnv();
@@ -128,17 +130,22 @@ const result = await searchTool.execute({
 console.log(result);
 ```
 
-Search parameters:
+Search parameters:
 
-- `query`: required search query text
-- `engine`: optional engine key such as `google`, `google_news`, `google_images`, `bing`, `duckduckgo`
-- `params`: optional engine-specific parameter object
-- common `params` fields include `gl`, `hl`, `device`, `location`, and `no_cache`
-- use `talor_serp_list_engines` to inspect detailed parameters for a specific engine
+*   `query`: required search query text
+    
+*   `engine`: optional engine key such as , , , , `google``google_news``google_images``bing``duckduckgo`
+    
+*   `params`: optional engine-specific parameter object
+    
+*   common fields include , , , , and `params``gl``hl``device``location``no_cache`
+    
+*   use to inspect detailed parameters for a specific engine`talor_serp_list_engines`
+    
 
-`params` also accepts a JSON string when returned by a model tool call, for example:
+`params` also accepts a JSON string when returned by a model tool call, for example:
 
-```typescript
+```plaintext
 const result = await searchTool.execute({
   query: "LangChain tutorial",
   engine: "google",
@@ -146,9 +153,9 @@ const result = await searchTool.execute({
 });
 ```
 
-### 6. History tool
+### 6. History tool
 
-```typescript
+```plaintext
 import { TalorDataSerpTool } from "langchain-talordata";
 
 const historyTool = TalorDataSerpTool.historyFromEnv();
@@ -165,20 +172,28 @@ const result = await historyTool.execute({
 console.log(result);
 ```
 
-History parameters:
+History parameters:
 
-- `page`: page number, default `1`
-- `page_size`: page size, default `20`
-- `search_query`: optional keyword filter
-- `search_engine`: optional engine filter such as `google` or `bing`
-- `status`: `all`, `success`, or `error`
-- `start_time`: optional unix timestamp in seconds
-- `end_time`: optional unix timestamp in seconds
-- `timezone`: optional timezone header such as `Asia/Shanghai` or `+08:00`
+*   `page`: page number, default `1`
+    
+*   `page_size`: page size, default `20`
+    
+*   `search_query`: optional keyword filter
+    
+*   `search_engine`: optional engine filter such as or `google``bing`
+    
+*   `status`: , , or `all``success``error`
+    
+*   `start_time`: optional unix timestamp in seconds
+    
+*   `end_time`: optional unix timestamp in seconds
+    
+*   `timezone`: optional timezone header such as or `Asia/Shanghai``+08:00`
+    
 
-### 7. Statistics tool
+### 7. Statistics tool
 
-```typescript
+```plaintext
 import { TalorDataSerpTool } from "langchain-talordata";
 
 const statisticsTool = TalorDataSerpTool.statisticsFromEnv();
@@ -193,16 +208,20 @@ const result = await statisticsTool.execute({
 console.log(result);
 ```
 
-Statistics parameters:
+Statistics parameters:
 
-- `start_date`: required, format `YYYY-MM-DD`
-- `end_date`: required, format `YYYY-MM-DD`
-- `engines`: optional comma-separated engine keys such as `google,bing`
-- `timezone`: optional timezone offset such as `+08:00`
+*   `start_date`: required, format `YYYY-MM-DD`
+    
+*   `end_date`: required, format `YYYY-MM-DD`
+    
+*   `engines`: optional comma-separated engine keys such as `google,bing`
+    
+*   `timezone`: optional timezone offset such as `+08:00`
+    
 
-### 8. Bind multiple tools
+### 8. Bind multiple tools
 
-```typescript
+```plaintext
 import { ChatOpenAI } from "@langchain/openai";
 import { TalorDataSerpTool } from "langchain-talordata";
 
@@ -238,42 +257,53 @@ for (const call of response.tool_calls ?? []) {
 }
 ```
 
-These tool descriptors expose:
+These tool descriptors expose:
 
-- `name`
-- `description`
-- `inputSchema`
-- `execute(input)`
+*   `name`
+    
+*   `description`
+    
+*   `inputSchema`
+    
+*   `execute(input)`
+    
 
-`bindTools()` only lets the model generate `tool_calls`. To actually execute
-the selected tool, your code still needs to call `tool.execute(...)`.
+`bindTools()` only lets the model generate . To actually execute the selected tool, your code still needs to call .`tool_calls``tool.execute(...)`
 
 ## Tools
 
-- `talor_serp_search` - search the web with engine-specific parameters
-- `talor_serp_list_engines` - inspect supported engines and detailed parameter schemas
-- `talor_serp_history` - query historical SERP requests
-- `talor_serp_statistics` - query usage statistics for a date range
+*   `talor_serp_search` - search the web with engine-specific parameters
+    
+*   `talor_serp_list_engines` - inspect supported engines and detailed parameter schemas
+    
+*   `talor_serp_history` - query historical SERP requests
+    
+*   `talor_serp_statistics` - query usage statistics for a date range
+    
 
-### Compatibility note
+### Compatibility note
 
-If you are using modern LangChain JavaScript packages such as:
+If you are using modern LangChain JavaScript packages such as:
 
-- `langchain@1.x`
-- `@langchain/openai@1.x`
+*   `langchain@1.x`
+    
+*   `@langchain/openai@1.x`
+    
 
-prefer the chat-model tool-calling flow shown above. In this package, Talor
-tools are lightweight descriptors rather than auto-executing LangChain tools,
-so the recommended pattern is:
+prefer the chat-model tool-calling flow shown above. In this package, Talor tools are lightweight descriptors rather than auto-executing LangChain tools, so the recommended pattern is:
 
-- let the model generate `tool_calls`
-- match the tool by `name`
-- execute it with `tool.execute(call.args)`
-- optionally feed the tool result back into your own agent loop
+*   let the model generate `tool_calls`
+    
+*   match the tool by `name`
+    
+*   execute it with `tool.execute(call.args)`
+    
+*   optionally feed the tool result back into your own agent loop
+    
 
-## Wrapper API
+## Wrapper API
 
-```typescript
+```plaintext
 import { TalorDataSerpAPIWrapper } from "langchain-talordata";
 
 const wrapper = new TalorDataSerpAPIWrapper({
@@ -298,28 +328,37 @@ const desc = wrapper.engineDescription("google_flights");
 const schema = wrapper.engineParamSchema("google_shopping");
 ```
 
-For direct wrapper calls:
+For direct wrapper calls:
 
-- `wrapper.run(query, engine?, kwargs?)`
-- `wrapper.results(query, engine?, kwargs?)`
-- `wrapper.history({ page, pageSize, searchQuery, ... })`
-- `wrapper.statistics({ startDate, endDate, ... })`
+*   `wrapper.run(query, engine?, kwargs?)`
+    
+*   `wrapper.results(query, engine?, kwargs?)`
+    
+*   `wrapper.history({ page, pageSize, searchQuery, ... })`
+    
+*   `wrapper.statistics({ startDate, endDate, ... })`
+    
 
-## Engine Parameters
+## Engine Parameters
 
-Each engine has unique parameters. Use `engineDescription()` or `engineParamSchema()` to discover available parameters.
+Each engine has unique parameters. Use or to discover available parameters.`engineDescription()``engineParamSchema()`
 
-### Common Parameters
+### Common Parameters
 
-- `gl` - Country/region code (for example `us`, `cn`, `uk`)
-- `hl` - Interface language (for example `en`, `zh`, `ja`)
-- `device` - Device type: `desktop`, `mobile`, `tablet`
-- `location` - Geographic targeting
-- `no_cache` - Boolean, force fresh results
+*   `gl` - Country/region code (for example , , `us``cn``uk`)
+    
+*   `hl` - Interface language (for example , , `en``zh``ja`)
+    
+*   `device` - Device type: , , `desktop``mobile``tablet`
+    
+*   `location` - Geographic targeting
+    
+*   `no_cache` - Boolean, force fresh results
+    
 
 ## Development
 
-```bash
+```plaintext
 npm install
 npm run build
 npm run dev
@@ -329,37 +368,32 @@ npm run clean
 
 ## Resources
 
-- npm: [langchain-talordata](https://www.npmjs.com/package/langchain-talordata)
-- TalorData: [talordata.com](https://talordata.com)
-- Quick start: [QUICK_START.md](QUICK_START.md)
-- Migration: [MIGRATION.md](MIGRATION.md)
+*   npm: [langchain-talordata](https://www.npmjs.com/package/langchain-talordata)
+    
+*   TalorData: [talordata.com](https://www.talordata.com/serp-api/langchain?campaignid=1cypxmLvv6k0zrDj&utm_source=langchain&utm_term=langchain29)
+    
+*   Quick start: [QUICK\_START.md](https://github.com/Talordata/langchain-talordata-ts/blob/main/QUICK_START.md)
+    
+*   Migration: [MIGRATION.md](https://github.com/Talordata/langchain-talordata-ts/blob/main/MIGRATION.md)
+    
 
-## License
+## Support
 
-MIT
+For issues with the LangChain integration package, report an issue in the [GitHub repository](https://github.com/talordata).
 
-## 🎁 Get Started for Free
+For TalorData SERP API account, quota, or API key issues, contact TalorData support through the support channel listed in your TalorData account or dashboard.
 
-Try TalorData SERP API with **1,000 free searches** and start building AI agents, SEO tools, and search-driven applications today.
-
-- No infrastructure to manage
-- Multi-engine search access
-- Real-time structured results
-- Developer-friendly integration
-
-👉 [Start Free](https://talordata.com/?campaignid=hiy46bmdwF990Hqs&utm_source=Github29&utm_term=Github29)
+For detailed integration tutorials and API documentation, visit the TalorData Documentation.
 
 ---
 
-## 🤝 Connect With Us
+## Learn More
 
-Have questions or want to collaborate? Reach out through any of the following channels:
+Ready to build AI agents with real-time search in LangChain?
 
-- 📧 **Email:** [support@talordata.com](mailto:support@talordata.com)  
-- 🌐 **Website:** [https://talordata.com](	https://talordata.com/?campaignid=hiy46bmdwF990Hqs&utm_source=Github29&utm_term=Github29)   
-- 📱 **WhatsApp:** [+852 5628 3471](https://wa.me/85256283471)  
-- 💼 **LinkedIn:** [TalorData](linkedin.com/company/talordata)
+**Explore the** [**TalorData LangChain Integration Guide**](https://www.talordata.com/serp-api/langchain?campaignid=1cypxmLvv6k0zrDj&utm_source=langchain&utm_term=langchain29)
+
+**Read the** [**Integration Documentation**](https://www.talordata.com/serp-api/langchain?campaignid=1cypxmLvv6k0zrDj&utm_source=langchain&utm_term=langchain29)
 
 ---
-
-> **TalorData empowers developers and AI agents with fast, reliable search-data access through a single multi-engine SERP API.**
+> **TalorData brings real-time search to LangChain, enabling developers to build AI agents and workflows with fresh, structured, and reliable search data.**
